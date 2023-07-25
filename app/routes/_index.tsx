@@ -36,6 +36,7 @@ export default function Index() {
           </a>
         </li>
       </ul>
+      <div>This is added after building by template.</div>
     </div>
   );
 }
