@@ -1,4 +1,6 @@
-import type { V2_MetaFunction } from "@remix-run/cloudflare";
+import type { V2_MetaFunction, LoaderArgs } from "@remix-run/cloudflare";
+import { json } from "@remix-run/cloudflare";
+import { useLoaderData } from "@remix-run/react";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -7,7 +9,17 @@ export const meta: V2_MetaFunction = () => {
   ];
 };
 
+export const loader = async ({ request }: LoaderArgs) => {
+  const url = new URL(request.url);
+  const res = await fetch(`${url.origin}/randomNumber`);
+  const num: number = await res.json();
+  console.log("num", num);
+  return json({ num });
+};
+
 export default function Index() {
+  const { num } = useLoaderData<typeof loader>();
+
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <h1>Welcome to Remix</h1>
@@ -37,6 +49,7 @@ export default function Index() {
         </li>
       </ul>
       <div>This is added after building by template.</div>
+      <div>This is random number: {num}</div>
     </div>
   );
 }
