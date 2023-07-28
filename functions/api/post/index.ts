@@ -13,7 +13,7 @@ export interface Post {
 }
 
 // Data of the List of Post type
-const posts: Post[] = [
+export const posts: Post[] = [
   {
     id: "1",
     title: "First Post",
