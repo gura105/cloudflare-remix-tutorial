@@ -1,7 +1,7 @@
 import type { V2_MetaFunction, LoaderArgs } from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";
-import { useLoaderData } from "@remix-run/react";
-import type { Post } from "../../functions/post/index";
+import { Link, useLoaderData } from "@remix-run/react";
+import type { Post } from "../../functions/api/post/index";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -13,7 +13,7 @@ export const meta: V2_MetaFunction = () => {
 // Remix loader function that call api(/{domain}/post) and return Post[] type data
 export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);
-  const res = await fetch(`${url.origin}/post`);
+  const res = await fetch(`${url.origin}/api/post`);
   const posts: Post[] = await res.json();
   return json({ posts });
 };
@@ -54,7 +54,7 @@ export default function Index() {
           <h2>{post.title}</h2>
           <li>{post.content}</li>
           <li>{post.author}</li>
-          <a href={`/post/${post.id}`}>View Post</a>
+          <Link to={`/post/${post.id}`}>View Post</Link>
         </div>
       ))}
     </div>
