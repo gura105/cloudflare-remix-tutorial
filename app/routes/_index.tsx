@@ -49,14 +49,16 @@ export default function Index() {
           </a>
         </li>
       </ul>
-      {posts.map((post) => (
-        <div key={post.id}>
-          <h2>{post.title}</h2>
-          <li>{post.content}</li>
-          <li>{post.author}</li>
-          <Link to={`/post/${post.id}`}>View Post</Link>
-        </div>
-      ))}
+      <ul>
+        {posts.map((post) => (
+          <li key={post.id}>
+            <h2>{post.title}</h2>
+            <div>{post.content}</div>
+            <div>{post.author}</div>
+            <Link to={`/post/${post.id}`}>View Post</Link>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

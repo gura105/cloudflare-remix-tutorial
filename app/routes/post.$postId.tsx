@@ -21,8 +21,8 @@ export default function Post() {
       {post && (
         <div>
           <h2>{post.title}</h2>
-          <li>{post.content}</li>
-          <li>{post.author}</li>
+          <div>{post.content}</div>
+          <div>{post.author}</div>
         </div>
       )}
       <Link to="/">Back to Home</Link>
