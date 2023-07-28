@@ -5,7 +5,7 @@ export const onRequest: PagesFunction = async () => {
 };
 
 // Definition of the Post type
-interface Post {
+export interface Post {
   id: string;
   title: string;
   content: string;
