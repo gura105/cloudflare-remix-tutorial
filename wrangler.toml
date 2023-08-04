@@ -1,0 +1,4 @@
+[[d1_databases]]
+binding = "DB" # i.e. available in your Worker on env.DB
+database_name = "cloudflare-remix-tutorial"
+database_id = "ff694eba-4dba-47f3-bc82-07de107cc635"
