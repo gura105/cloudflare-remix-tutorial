@@ -1,15 +1,20 @@
 import { json, type LoaderArgs } from "@remix-run/cloudflare";
 import { Link, useLoaderData } from "@remix-run/react";
-import type { Post } from "../../functions/api/post/index";
+import type { Post } from "../../model/index";
 
-// function that returns remix route params
-export const loader = async ({ request, params }: LoaderArgs) => {
-  const postId = params.postId;
-  // get post from web api(path is {domain}/api/[postId])
-  const url = new URL(request.url);
-  const res = await fetch(`${url.origin}/api/post/${postId}`);
-  const post: Post = await res.json();
-  return json({ post });
+export interface Env {
+  DB: D1Database;
+}
+
+// Remix loader function that call api(/{domain}/post) and return Post[] type data
+export const loader = async ({ context, params }: LoaderArgs) => {
+  const env = context.env as Env;
+  const { postId } = params;
+  const { results } = await env.DB.prepare(
+    `SELECT * FROM Post WHERE ID == ${postId}`
+  ).all<Post>();
+  const posts = results ?? [];
+  return json({ post: posts[0] });
 };
 
 export default function Post() {
@@ -20,9 +25,9 @@ export default function Post() {
       <h1>Post Detail</h1>
       {post && (
         <div>
-          <h2>{post.title}</h2>
-          <div>{post.content}</div>
-          <div>{post.author}</div>
+          <h2>{post.Title}</h2>
+          <div>{post.Content}</div>
+          <div>{post.Author}</div>
         </div>
       )}
       <Link to="/">Back to Home</Link>

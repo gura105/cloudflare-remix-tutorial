@@ -1,16 +1,10 @@
+import type { Post } from "../../../model/index";
+
 // Function that return list of posts
 export const onRequest: PagesFunction = async () => {
   const posts = await getPosts();
   return new Response(JSON.stringify(posts));
 };
-
-// Definition of the Post type
-export interface Post {
-  id: string;
-  title: string;
-  content: string;
-  author: string;
-}
 
 // Data of the List of Post type
 export const posts: Post[] = [

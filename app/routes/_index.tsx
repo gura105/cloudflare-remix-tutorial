@@ -1,7 +1,7 @@
 import type { V2_MetaFunction, LoaderArgs } from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";
 import { Link, useLoaderData } from "@remix-run/react";
-import type { Post } from "../../functions/api/post/index";
+import type { Post } from "../../model/index";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -10,11 +10,15 @@ export const meta: V2_MetaFunction = () => {
   ];
 };
 
+export interface Env {
+  DB: D1Database;
+}
+
 // Remix loader function that call api(/{domain}/post) and return Post[] type data
-export const loader = async ({ request }: LoaderArgs) => {
-  const url = new URL(request.url);
-  const res = await fetch(`${url.origin}/api/post`);
-  const posts: Post[] = await res.json();
+export const loader = async ({ context }: LoaderArgs) => {
+  const env = context.env as Env;
+  const { results } = await env.DB.prepare("SELECT * FROM Post").all<Post>();
+  const posts = results ?? [];
   return json({ posts });
 };
 
@@ -24,38 +28,13 @@ export default function Index() {
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <h1>Welcome to Remix</h1>
-      {/* <ul>
-        <li>
-          <a
-            target="_blank"
-            href="https://remix.run/tutorials/blog"
-            rel="noreferrer"
-          >
-            15m Quickstart Blog Tutorial
-          </a>
-        </li>
-        <li>
-          <a
-            target="_blank"
-            href="https://remix.run/tutorials/jokes"
-            rel="noreferrer"
-          >
-            Deep Dive Jokes App Tutorial
-          </a>
-        </li>
-        <li>
-          <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
-            Remix Docs
-          </a>
-        </li>
-      </ul> */}
       <ul>
         {posts.map((post) => (
-          <li key={post.id}>
-            <h2>{post.title}</h2>
-            <div>{post.content}</div>
-            <div>{post.author}</div>
-            <Link to={`/post/${post.id}`}>View Post</Link>
+          <li key={post.ID}>
+            <h2>{post.Title}</h2>
+            <div>{post.Content}</div>
+            <div>{post.Author}</div>
+            <Link to={`/post/${post.ID}`}>View Post</Link>
           </li>
         ))}
       </ul>
